@@ -1,0 +1,2 @@
+class Flobhob < ApplicationRecord
+end

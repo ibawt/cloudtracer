@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @heeby.name %>
+</p>
+
+<p>
+  <strong>Age:</strong>
+  <%= @heeby.age %>
+</p>
+
+<%= link_to 'Edit', edit_heeby_path(@heeby) %> |
+<%= link_to 'Back', heebies_path %>

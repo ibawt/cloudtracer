@@ -1,0 +1,2 @@
+class Heebie < ApplicationRecord
+end
