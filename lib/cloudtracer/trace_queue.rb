@@ -1,15 +1,18 @@
 require 'thread'
 
 module Cloudtracer
-  class TraceQueue
+  class TraceQueue < Base
     def initialize
-      @thread = Thread.new(&methods(:work))
+      @thread = Thread.new do
+        work
+      end
     end
 
     def work
       loop do
         begin
           trace = queue.pop
+          Rails.logger.info("Sending a trace!")
           service.patch_project_traces(config.project_id, trace)
         rescue Google::Apis::Error => e
           logger.warn("Exception in TraceQueue: #{e.message}: #{e.body}")

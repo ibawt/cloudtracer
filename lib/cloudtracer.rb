@@ -15,6 +15,7 @@ module Cloudtracer
 end
 
 require 'cloudtracer/version'
+require 'cloudtracer/base'
 require 'cloudtracer/config'
 require 'cloudtracer/notifications'
 require 'cloudtracer/middleware'

@@ -1,5 +1,5 @@
 module Cloudtracer
-  class Middleware
+  class Middleware < Base
     def initialize(app)
       @app = app
     end

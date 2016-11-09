@@ -1,11 +1,11 @@
 module Cloudtracer
-  class TraceContext
+  class TraceContext < Base
     attr_accessor :traces
     attr_reader :parent_span_id
     attr_accessor :span_id, :trace_id
     attr_accessor :trace
 
-    def initialize(ctx, project_id)
+    def initialize(ctx)
       if m = %r{(.*)/(.*);*(.*)}.match(ctx)
         @parent_span_id = m[2].to_i
         @trace_id = m[1]
@@ -14,8 +14,8 @@ module Cloudtracer
 
         @trace = Google::Apis::CloudtraceV1::Trace.new(
           trace_id: trace_id,
-          project_id: project_id,
-          span: []
+          project_id: config.project_id,
+          spans: []
         )
 
         @traces = Google::Apis::CloudtraceV1::Traces.new(traces: [trace])
@@ -24,23 +24,34 @@ module Cloudtracer
       end
     end
 
-    def with_trace(&block)
-      Cloudtracer.start_trace_context(tc)
-      yield block
+    def with_trace
+      Thread.current.thread_variable_set(:cloud_trace_context, self)
+      yield if block_given?
     ensure
-      Cloudtracer.end_trace_context(tc)
+      Thread.current.thread_variable_set(:cloud_trace_context, nil)
+      trace_queue.push(traces)
     end
 
     def update(span)
-      span.parent_id = parent_id
+      span.parent_span_id = parent_span_id
       span.span_id = next_span_id
       trace.spans << span
     end
 
     private
 
+    def trace_queue
+      self.class.trace_queue
+    end
+
     def next_span_id
       self.span_id += 1
+    end
+
+    class << self
+      def trace_queue
+        @trace_queue ||= TraceQueue.new
+      end
     end
   end
 end
