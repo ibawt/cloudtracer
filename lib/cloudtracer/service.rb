@@ -13,6 +13,5 @@ module Cloudtracer
     def configure
       yield config
     end
-
   end
 end

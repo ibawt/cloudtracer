@@ -12,10 +12,9 @@ module Cloudtracer
       loop do
         begin
           trace = queue.pop
-          Rails.logger.info("Sending a trace!")
-          service.patch_project_traces(config.project_id, trace)
-        rescue Google::Apis::Error => e
-          logger.warn("Exception in TraceQueue: #{e.message}: #{e.body}")
+          self.class.service.patch_project_traces(config.project_id, trace)
+        rescue => e
+          Rails.logger.warn("Exception in TraceQueue: #{e.message}")
         end
       end
     end
@@ -35,15 +34,14 @@ module Cloudtracer
     end
 
     class << self
-      private
-
       def service
         @servce ||= begin
                       scope = ['https://www.googleapis.com/auth/trace.append']
                       auth = Google::Auth.get_application_default(scope)
 
-                      s = Google::Apis::CloudtraceV1::CloudTraceServer.new
+                      s = Google::Apis::CloudtraceV1::CloudTraceService.new
                       s.authorization = auth
+                      s
                     end
       end
     end
