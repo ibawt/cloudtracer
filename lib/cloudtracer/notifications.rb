@@ -44,7 +44,7 @@ module Cloudtracer
         name: name,
         start_time: started,
         end_time: finished,
-        labels: data
+        labels: clean_labels(data)
       )
 
       return unless process_span(name, span)
@@ -79,6 +79,13 @@ module Cloudtracer
 
     def to_method(name)
       name.tr('.', '_').to_sym
+    end
+
+    def clean_labels(data)
+      data.inject({}) do |h, (key, value)|
+        h[key.to_s] = value.to_s
+        h
+      end
     end
   end
 end
