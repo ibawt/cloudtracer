@@ -25,11 +25,27 @@ module Cloudtracer
     end
 
     def with_trace
-      Thread.current.thread_variable_set(:cloud_trace_context, self)
-      yield if block_given?
-    ensure
-      Thread.current.thread_variable_set(:cloud_trace_context, nil)
-      trace_queue.push(traces)
+      t1 = Time.now
+      begin
+        Thread.current.thread_variable_set(:cloud_trace_context, self)
+        yield if block_given?
+      ensure
+        t2 = Time.now
+
+        span = Google::Apis::CloudtraceV1::TraceSpan.new(
+          name: 'Cloudtracer::Middleware',
+          span_id: next_span_id,
+          parent_span_id: parent_span_id,
+          start_time:  t1,
+          end_time: t2,
+          labels: {}
+        )
+        trace.spans << span
+
+        Thread.current.thread_variable_set(:cloud_trace_context, nil)
+
+        trace_queue.push(traces)
+      end
     end
 
     def update(span)
