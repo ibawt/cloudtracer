@@ -83,7 +83,7 @@ module Cloudtracer
 
     def clean_labels(data)
       data.inject({}) do |h, (key, value)|
-        h[key.to_s] = value.to_s
+        h[key] = value.to_s
         h
       end
     end
