@@ -34,11 +34,10 @@ module Cloudtracer
     end
 
     class << self
+      OAUTH_SCOPES = %w(https://www.googleapis.com/auth/trace.append).freeze
       def service
-        @servce ||= begin
-                      scope = ['https://www.googleapis.com/auth/trace.append']
-                      auth = Google::Auth.get_application_default(scope)
-
+        @service ||= begin
+                      auth = Google::Auth.get_application_default(OAUTH_SCOPES)
                       s = Google::Apis::CloudtraceV1::CloudTraceService.new
                       s.authorization = auth
                       s
