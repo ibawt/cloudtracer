@@ -29,11 +29,19 @@ module Cloudtracer
 end
 
 require 'cloudtracer/version'
+require 'cloudtracer/error'
 require 'cloudtracer/base'
 require 'cloudtracer/config'
 require 'cloudtracer/notifications'
 require 'cloudtracer/middleware'
-require 'cloudtracer/service'
 require 'cloudtracer/trace_context'
 require 'cloudtracer/trace_queue'
 require 'cloudtracer/railtie' if defined?(Rails)
+
+if defined?(Redis)
+  require 'cloudtracer/redis'
+  Redis::Client.prepend(Cloudtracer::Redis)
+end
+
+require 'cloudtracer/http'
+Net::HTTP.prepend(Cloudtracer::Http)

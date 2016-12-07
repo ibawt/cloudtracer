@@ -30,10 +30,12 @@ module Cloudtracer
       enqueue.active_job
       perform_start.active_job
       perform.active_job
+      net::http
+      redis.call
     ).freeze
 
     def register!
-      (TOPICS - Cloudtracer.config.blacklist_topics).each do |topic|
+      (TOPICS - Cloudtracer.config.blacklist_topics + Cloudtracer.config.extra_topics).each do |topic|
         subscribe topic
       end
     end

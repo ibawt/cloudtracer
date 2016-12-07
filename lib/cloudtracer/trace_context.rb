@@ -66,7 +66,13 @@ module Cloudtracer
 
     class << self
       def trace_queue
-        @trace_queue ||= TraceQueue.new
+        @trace_queue ||= begin
+                           if Cloudtracer.config.queue_adapter
+                             Cloudtracer.config.queue_adapter.new
+                           else
+                             TraceQueue.new
+                           end
+                         end
       end
     end
   end

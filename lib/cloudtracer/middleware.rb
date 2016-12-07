@@ -1,6 +1,7 @@
 module Cloudtracer
   class Middleware < Base
     HEADER = 'HTTP_X_CLOUD_TRACE_CONTEXT'.freeze
+
     def initialize(app)
       @app = app
     end
