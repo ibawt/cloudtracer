@@ -1,4 +1,5 @@
 require 'thread'
+require 'googleauth'
 
 module Cloudtracer
   class TraceQueue < Base

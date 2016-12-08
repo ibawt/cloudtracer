@@ -1,12 +1,12 @@
-require 'googleauth'
-require 'google/apis/cloudtrace_v1'
-require 'active_support'
-
 module Cloudtracer
   extend self
 
   def current_context
     Thread.current.thread_variable_get(:cloud_trace_context)
+  end
+
+  def current_context=(object)
+    Thread.current.thread_variable_set(:cloud_trace_context, object)
   end
 
   class << self

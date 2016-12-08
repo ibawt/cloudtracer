@@ -1,3 +1,5 @@
+require 'google/apis/cloudtrace_v1'
+
 module Cloudtracer
   class TraceContext < Base
     attr_accessor :traces
