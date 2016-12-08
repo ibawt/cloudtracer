@@ -12,7 +12,7 @@ RSpec.describe 'Integration tests', type: :request do
     end
 
     let(:invalid_header) { { 'X-Cloud-Trace-Context' => 'invalid' } }
-    let(:valid_header) { { 'X-Cloud-Trace-Context' => 'deadbeef/foobar;extra_stuff' } }
+    let(:valid_header) { { 'X-Cloud-Trace-Context' => 'deadbeef/23423423423;extra_stuff' } }
 
     it 'should raise if the header is malfomed' do
       expect { get '/', headers: invalid_header }.to raise_error(Cloudtracer::Error)

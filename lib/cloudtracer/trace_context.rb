@@ -2,31 +2,27 @@ require 'google/apis/cloudtrace_v1'
 
 module Cloudtracer
   class TraceContext < Base
+    MIDDLEWARE_SPAN = 'Cloudtracer::Middleware'.freeze
+
     attr_accessor :traces
     attr_reader :parent_span_id
     attr_accessor :span_id, :trace_id
     attr_accessor :trace
 
     def initialize(ctx)
-      if m = %r{(.*)/(.*);*(.*)}.match(ctx)
-        @parent_span_id = m[2].to_i
-        @trace_id = m[1]
-        @trace_options = m[3] if m.length > 2
-        @span_id = parent_span_id + 1
+      @trace_id, @parent_span_id, @trace_options = parse_header(ctx)
+      @span_id = parent_span_id + 1
 
-        @trace = Google::Apis::CloudtraceV1::Trace.new(
-          trace_id: trace_id,
-          project_id: config.project_id,
-          spans: []
-        )
+      @trace = Google::Apis::CloudtraceV1::Trace.new(
+        trace_id: trace_id,
+        project_id: config.project_id,
+        spans: []
+      )
 
-        @traces = Google::Apis::CloudtraceV1::Traces.new(traces: [trace])
-      else
-        raise Error, "Invalid Trace Context: #{ctx}"
-      end
+      @traces = Google::Apis::CloudtraceV1::Traces.new(traces: [trace])
     end
 
-    def with_trace
+    def with_trace(&_block)
       t1 = Time.now
       begin
         Thread.current.thread_variable_set(:cloud_trace_context, self)
@@ -35,7 +31,7 @@ module Cloudtracer
         t2 = Time.now
 
         span = Google::Apis::CloudtraceV1::TraceSpan.new(
-          name: 'Cloudtracer::Middleware',
+          name: MIDDLEWARE_SPAN,
           span_id: next_span_id,
           parent_span_id: parent_span_id,
           start_time:  t1,
@@ -57,6 +53,12 @@ module Cloudtracer
     end
 
     private
+
+    def parse_header(ctx)
+      m = %r{(\w+)/(\d+);*(.*)}.match(ctx)
+      return [m[1], Integer(m[2]), m.length > 2 ? m[3] : ''] if m
+      raise Error, "Invalid Trace Context: #{ctx}"
+    end
 
     def trace_queue
       self.class.trace_queue
