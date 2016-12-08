@@ -1,8 +1,14 @@
 # Cloudtracer
-Short description and motivation.
+[![Build Status](https://travis-ci.org/ibawt/cloudtracer.svg?branch=master)](https://travis-ci.org/ibawt/cloudtracer)
+
+A Rails plugin for Google's CloudTrace API.
 
 ## Usage
-How to use my plugin.
+```ruby
+Cloudtrace.configure do |config|
+  config.project_id = 'my-cool-project'
+end
+```
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -10,19 +16,5 @@ Add this line to your application's Gemfile:
 ```ruby
 gem 'cloudtracer'
 ```
-
-And then execute:
-```bash
-$ bundle
-```
-
-Or install it yourself as:
-```bash
-$ gem install cloudtracer
-```
-
-## Contributing
-Contribution directions go here.
-
 ## License
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
