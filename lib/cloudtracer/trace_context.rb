@@ -20,7 +20,7 @@ module Cloudtracer
 
         @traces = Google::Apis::CloudtraceV1::Traces.new(traces: [trace])
       else
-        raise Error "Invalid Trace Context: #{ctx}"
+        raise Error, "Invalid Trace Context: #{ctx}"
       end
     end
 

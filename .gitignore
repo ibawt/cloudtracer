@@ -6,3 +6,4 @@ dummy/db/*.sqlite3-journal
 dummy/log/*.log
 dummy/tmp/
 Gemfile.lock
+dummy/db/test.sqlite3
