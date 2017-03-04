@@ -10,6 +10,7 @@ module Cloudtracer
       header = env[HEADER]
       return @app.call(env) unless header
 
+      logger.info("Tracing request with: #{header}")
       TraceContext.new(header).with_trace do
         @app.call(env)
       end

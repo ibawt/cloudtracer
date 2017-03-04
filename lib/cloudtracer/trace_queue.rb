@@ -14,8 +14,8 @@ module Cloudtracer
         begin
           trace = queue.pop
           self.class.service.patch_project_traces(config.project_id, trace)
-        rescue => e
-          Rails.logger.warn("Exception in TraceQueue: #{e.message}")
+        rescue StandardError => e
+          logger.warn("Exception in TraceQueue: #{e.message}")
         end
       end
     end

@@ -9,6 +9,13 @@ module Cloudtracer
     Thread.current.thread_variable_set(:cloud_trace_context, object)
   end
 
+  def with_context(object)
+    self.current_context = object
+    yield
+  ensure
+    self.current_context = nil
+  end
+
   class << self
     def config
       @config ||= Config.new

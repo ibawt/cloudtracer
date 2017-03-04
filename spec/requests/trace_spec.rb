@@ -18,7 +18,7 @@ RSpec.describe 'Integration tests', type: :request do
       expect { get '/', headers: invalid_header }.to raise_error(Cloudtracer::Error)
     end
 
-    it 'should produce a trace witha  valid header' do
+    it 'should produce a trace with a valid header' do
       get '/', headers: valid_header
       expect(TestTraceQueue.queue).to_not be_empty
     end
