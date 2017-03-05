@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email       = ['ian.quick@gmail.com']
   s.homepage    = 'https://github.com/ibawt/cloudtracer'
   s.summary     = 'Rails plugin for Google Cloudtrace'
-  s.description = ''
+  s.description = 'see summary'
   s.license     = 'MIT'
 
   s.files = Dir['lib/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
